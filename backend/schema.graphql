@@ -6,6 +6,7 @@ type User {
   name: String
   email: String
   password: PasswordState
+  role: [UserRoleType!]
   posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
   postsCount(where: PostWhereInput! = {}): Int
   createdAt: DateTime
@@ -13,6 +14,13 @@ type User {
 
 type PasswordState {
   isSet: Boolean!
+}
+
+enum UserRoleType {
+  ROLE_ADMIN
+  ROLE_AD_MANAGER
+  ROLE_CONTENT_CREATOR
+  ROLE_VIEWER
 }
 
 scalar DateTime @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
@@ -105,6 +113,7 @@ input UserUpdateInput {
   name: String
   email: String
   password: String
+  role: [UserRoleType!]
   posts: PostRelateToManyForUpdateInput
   createdAt: DateTime
 }
@@ -125,6 +134,7 @@ input UserCreateInput {
   name: String
   email: String
   password: String
+  role: [UserRoleType!]
   posts: PostRelateToManyForCreateInput
   createdAt: DateTime
 }
@@ -298,6 +308,7 @@ input CreateInitialUserInput {
   name: String
   email: String
   password: String
+  role: [UserRoleType!]
 }
 
 type Query {

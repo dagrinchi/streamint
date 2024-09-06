@@ -1,5 +1,4 @@
 import { list } from '@keystone-6/core'
-import { allowAll } from '@keystone-6/core/access'
 
 import {
   text,
@@ -7,14 +6,31 @@ import {
   password,
   timestamp,
   select,
+  multiselect,
 } from '@keystone-6/core/fields'
 
 import { document } from '@keystone-6/fields-document'
 import { type Lists } from '.keystone/types'
 
+type Session = {
+  data: {
+    name: string;
+    email: string;
+    role: string[];
+    createdAt: string;
+  }
+}
+
+const isAdmin = ({ session }: { session?: Session }) => {
+  console.log(session)
+  return Boolean(session?.data.role.includes('ROLE_ADMIN'))
+};
+const isAdManager = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_AD_MANAGER'));
+const isContentCreator = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_CONTENT_CREATOR'));
+
 export const lists = {
   User: list({
-    access: allowAll,
+    access: isAdmin,
     fields: {
       name: text({ validation: { isRequired: true } }),
       email: text({
@@ -22,14 +38,23 @@ export const lists = {
         isIndexed: 'unique',
       }),
       password: password({ validation: { isRequired: true } }),
-      posts: relationship({ ref: 'Post.author', many: true }),
+      role: multiselect({
+        type: 'enum',
+        options: [
+          { label: 'Admin', value: 'ROLE_ADMIN' },
+          { label: 'Ad manager', value: 'ROLE_AD_MANAGER' },
+          { label: 'Content creator', value: 'ROLE_CONTENT_CREATOR' },
+          { label: 'Viewer', value: 'ROLE_VIEWER' },
+        ]
+      }),
+      posts: relationship({ ref: 'Post.author', many: true, ui: { hideCreate: true, displayMode: 'count' } }),
       createdAt: timestamp({
         defaultValue: { kind: 'now' },
       }),
     },
   }),
   Post: list({
-    access: allowAll,
+    access: isContentCreator,
     fields: {
       title: text({ validation: { isRequired: true } }),
       content: document({
@@ -71,7 +96,7 @@ export const lists = {
   }),
 
   Tag: list({
-    access: allowAll,
+    access: isContentCreator,
     ui: {
       isHidden: true,
     },
