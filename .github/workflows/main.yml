@@ -1,9 +1,9 @@
 name: Protocol Land Sync
 on:
-    # Run with every push to 'main' branch:
+    # Run with every push to 'master' branch:
     push:
         branches:
-            - 'main'
+            - 'master'
     # Run Manually:
     #workflow_dispatch:
 jobs:
