@@ -5,6 +5,25 @@
 
 Create a descentralized video monetization, enable direct transactions between content creators, video distributors and publishers.
 
+For running development backend project
+
+
+```
+cd ./backend
+nvm use
+npm install
+npm run dev
+```
+
+For running development frontend project
+
+
+```
+cd ./frontend
+nvm use
+npm install
+npm run dev
+```
 
 Wilson David Alméciga
 

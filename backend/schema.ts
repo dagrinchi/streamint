@@ -7,6 +7,8 @@ import {
   timestamp,
   select,
   multiselect,
+  file,
+  calendarDay,
 } from '@keystone-6/core/fields'
 
 import { document } from '@keystone-6/fields-document'
@@ -21,10 +23,7 @@ type Session = {
   }
 }
 
-const isAdmin = ({ session }: { session?: Session }) => {
-  console.log(session)
-  return Boolean(session?.data.role.includes('ROLE_ADMIN'))
-};
+const isAdmin = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_ADMIN'));
 const isAdManager = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_AD_MANAGER'));
 const isContentCreator = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_CONTENT_CREATOR'));
 
@@ -47,30 +46,47 @@ export const lists = {
           { label: 'Viewer', value: 'ROLE_VIEWER' },
         ]
       }),
+      ads: relationship({ ref: 'Ad.author', many: true, ui: { hideCreate: true, displayMode: 'count' } }),
       posts: relationship({ ref: 'Post.author', many: true, ui: { hideCreate: true, displayMode: 'count' } }),
       createdAt: timestamp({
         defaultValue: { kind: 'now' },
       }),
     },
   }),
-  Post: list({
-    access: isContentCreator,
+  Ad: list({
+    access: isAdManager,
     fields: {
       title: text({ validation: { isRequired: true } }),
-      content: document({
-        formatting: true,
-        layouts: [
-          [1, 1],
-          [1, 1, 1],
-          [2, 1],
-          [1, 2],
-          [1, 2, 1],
-        ],
-        links: true,
-        dividers: true,
+      starts: calendarDay({
+        validation: { isRequired: true }
+      }),
+      ends: calendarDay({
+        validation: { isRequired: true }
+      }),
+      description: text(),
+      status: select({
+        type: 'enum',
+        options: [
+          { label: 'Draft', value: 'DRAFT' },
+          { label: 'Progress', value: 'IN_PROGRESS' },
+          { label: 'Published', value: 'PUBLISHED' },
+        ]
+      }),
+      video: file({ storage: 'local_files_storage' }),
+      tags: relationship({
+        ref: 'Tag.ads',
+        many: true,
+        ui: {
+          displayMode: 'cards',
+          cardFields: ['name'],
+          inlineEdit: { fields: ['name'] },
+          linkToItem: true,
+          inlineConnect: true,
+          inlineCreate: { fields: ['name'] },
+        },
       }),
       author: relationship({
-        ref: 'User.posts',
+        ref: 'User.ads',
         ui: {
           displayMode: 'cards',
           cardFields: ['name', 'email'],
@@ -80,6 +96,22 @@ export const lists = {
         },
         many: false,
       }),
+    }
+  }),
+  Post: list({
+    access: isContentCreator,
+    fields: {
+      title: text({ validation: { isRequired: true } }),
+      description: text(),
+      status: select({
+        type: 'enum',
+        options: [
+          { label: 'Draft', value: 'DRAFT' },
+          { label: 'Progress', value: 'IN_PROGRESS' },
+          { label: 'Published', value: 'PUBLISHED' },
+        ]
+      }),
+      video: file({ storage: 'local_files_storage' }),
       tags: relationship({
         ref: 'Tag.posts',
         many: true,
@@ -92,9 +124,19 @@ export const lists = {
           inlineCreate: { fields: ['name'] },
         },
       }),
+      author: relationship({
+        ref: 'User.posts',
+        ui: {
+          displayMode: 'cards',
+          cardFields: ['name', 'email'],
+          inlineEdit: { fields: ['name', 'email'] },
+          linkToItem: true,
+          inlineConnect: true,
+        },
+        many: false,
+      })
     },
   }),
-
   Tag: list({
     access: isContentCreator,
     ui: {
@@ -102,6 +144,7 @@ export const lists = {
     },
     fields: {
       name: text(),
+      ads: relationship({ ref: 'Ad.tags', many: true }),
       posts: relationship({ ref: 'Post.tags', many: true }),
     },
   }),

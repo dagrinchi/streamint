@@ -17,17 +17,35 @@ model User {
   email     String    @unique @default("")
   password  String
   role      String    @default("[]")
+  ads       Ad[]      @relation("Ad_author")
   posts     Post[]    @relation("Post_author")
   createdAt DateTime? @default(now())
 }
 
+model Ad {
+  id             String  @id @default(cuid())
+  title          String  @default("")
+  starts         String
+  ends           String
+  description    String  @default("")
+  video_filesize Int?
+  video_filename String?
+  tags           Tag[]   @relation("Ad_tags")
+  author         User?   @relation("Ad_author", fields: [authorId], references: [id])
+  authorId       String? @map("author")
+
+  @@index([authorId])
+}
+
 model Post {
-  id       String  @id @default(cuid())
-  title    String  @default("")
-  content  String  @default("[{\"type\":\"paragraph\",\"children\":[{\"text\":\"\"}]}]")
-  author   User?   @relation("Post_author", fields: [authorId], references: [id])
-  authorId String? @map("author")
-  tags     Tag[]   @relation("Post_tags")
+  id             String  @id @default(cuid())
+  title          String  @default("")
+  description    String  @default("")
+  video_filesize Int?
+  video_filename String?
+  tags           Tag[]   @relation("Post_tags")
+  author         User?   @relation("Post_author", fields: [authorId], references: [id])
+  authorId       String? @map("author")
 
   @@index([authorId])
 }
@@ -35,5 +53,6 @@ model Post {
 model Tag {
   id    String @id @default(cuid())
   name  String @default("")
+  ads   Ad[]   @relation("Ad_tags")
   posts Post[] @relation("Post_tags")
 }

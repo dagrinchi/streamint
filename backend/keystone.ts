@@ -11,5 +11,16 @@ export default withAuth(
     },
     lists,
     session,
+    storage: {
+      local_files_storage: {
+        kind: 'local',
+        type: 'file',
+        generateUrl: path => `http://localhost:3000/files/${path}`,
+        serverRoute: {
+          path: '/files'
+        },
+        storagePath: 'public/files'
+      }
+    }
   })
 )
