@@ -1,5 +1,6 @@
 import { config } from '@keystone-6/core'
 import { lists } from './schema'
+import path from 'path'
 
 import { withAuth, session } from './auth'
 
@@ -21,6 +22,19 @@ export default withAuth(
         },
         storagePath: 'public/files'
       }
+    },
+    ui: {
+      getAdditionalFiles: [
+        async () => [{
+          mode: 'copy',
+          inputPath: path.join(path.resolve(__dirname, '..'), 'public/favicon.ico'),
+          outputPath: 'public/favicon.ico'
+        },{
+          mode: 'copy',
+          inputPath: path.join(path.resolve(__dirname, '..'), 'public/icon.png'),
+          outputPath: 'public/icon.png'
+        }]
+      ],
     }
   })
 )
