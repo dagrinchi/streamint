@@ -5,6 +5,7 @@
 
 import React from 'react'
 
+import Link from 'next/link'
 import { Button } from '@keystone-ui/button'
 import { SaveIcon } from '@keystone-ui/icons'
 
@@ -56,7 +57,12 @@ export default function StoreWallet() {
 
   if (walletStored < 0 || !Boolean(userEmail)) return <p css={{ textAlign: 'center' }}>Loading...</p>
 
-  if (walletStored > 0) return <p css={{ textAlign: 'center' }}>You are all set!</p>
+  if (walletStored > 0) return (
+    <>
+      <p css={{ textAlign: 'center' }}>You are all set!</p>
+      <p css={{ textAlign: 'center' }}>Now you can post videos at <Link href="/posts">/posts</Link></p>
+    </>
+  )
 
   return (
     <>
