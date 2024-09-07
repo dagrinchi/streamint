@@ -9,8 +9,9 @@
   },
   "dependencies": {
     "@keystone-6/auth": "^8.0.0",
-    "@keystone-6/core": "^6.0.0",
+    "@keystone-6/core": "^6.1.0",
     "@keystone-6/fields-document": "^9.0.0",
-    "typescript": "^5.5.0"
+    "arweave-wallet-kit": "^1.0.4",
+    "typescript": "~5.0.0"
   }
 }

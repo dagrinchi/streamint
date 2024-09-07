@@ -28,6 +28,7 @@ model Ad {
   starts         String
   ends           String
   description    String  @default("")
+  status         String?
   video_filesize Int?
   video_filename String?
   tags           Tag[]   @relation("Ad_tags")
@@ -41,6 +42,7 @@ model Post {
   id             String  @id @default(cuid())
   title          String  @default("")
   description    String  @default("")
+  status         String?
   video_filesize Int?
   video_filename String?
   tags           Tag[]   @relation("Post_tags")

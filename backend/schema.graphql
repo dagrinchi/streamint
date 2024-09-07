@@ -173,6 +173,7 @@ type Ad {
   starts: CalendarDay
   ends: CalendarDay
   description: String
+  status: AdStatusType
   video: FileFieldOutput
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
@@ -180,6 +181,12 @@ type Ad {
 }
 
 scalar CalendarDay @specifiedBy(url: "https://datatracker.ietf.org/doc/html/rfc3339#section-5.6")
+
+enum AdStatusType {
+  DRAFT
+  IN_PROGRESS
+  PUBLISHED
+}
 
 type FileFieldOutput {
   filename: String!
@@ -200,6 +207,7 @@ input AdWhereInput {
   starts: CalendarDayFilter
   ends: CalendarDayFilter
   description: StringFilter
+  status: AdStatusTypeNullableFilter
   tags: TagManyRelationFilter
   author: UserWhereInput
 }
@@ -215,6 +223,13 @@ input CalendarDayFilter {
   not: CalendarDayFilter
 }
 
+input AdStatusTypeNullableFilter {
+  equals: AdStatusType
+  in: [AdStatusType!]
+  notIn: [AdStatusType!]
+  not: AdStatusTypeNullableFilter
+}
+
 input TagManyRelationFilter {
   every: TagWhereInput
   some: TagWhereInput
@@ -227,6 +242,7 @@ input AdOrderByInput {
   starts: OrderDirection
   ends: OrderDirection
   description: OrderDirection
+  status: OrderDirection
 }
 
 input AdUpdateInput {
@@ -234,6 +250,7 @@ input AdUpdateInput {
   starts: CalendarDay
   ends: CalendarDay
   description: String
+  status: AdStatusType
   video: FileFieldInput
   tags: TagRelateToManyForUpdateInput
   author: UserRelateToOneForUpdateInput
@@ -269,6 +286,7 @@ input AdCreateInput {
   starts: CalendarDay
   ends: CalendarDay
   description: String
+  status: AdStatusType
   video: FileFieldInput
   tags: TagRelateToManyForCreateInput
   author: UserRelateToOneForCreateInput
@@ -288,10 +306,17 @@ type Post {
   id: ID!
   title: String
   description: String
+  status: PostStatusType
   video: FileFieldOutput
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   author: User
+}
+
+enum PostStatusType {
+  DRAFT
+  IN_PROGRESS
+  PUBLISHED
 }
 
 input PostWhereUniqueInput {
@@ -305,19 +330,29 @@ input PostWhereInput {
   id: IDFilter
   title: StringFilter
   description: StringFilter
+  status: PostStatusTypeNullableFilter
   tags: TagManyRelationFilter
   author: UserWhereInput
+}
+
+input PostStatusTypeNullableFilter {
+  equals: PostStatusType
+  in: [PostStatusType!]
+  notIn: [PostStatusType!]
+  not: PostStatusTypeNullableFilter
 }
 
 input PostOrderByInput {
   id: OrderDirection
   title: OrderDirection
   description: OrderDirection
+  status: OrderDirection
 }
 
 input PostUpdateInput {
   title: String
   description: String
+  status: PostStatusType
   video: FileFieldInput
   tags: TagRelateToManyForUpdateInput
   author: UserRelateToOneForUpdateInput
@@ -331,6 +366,7 @@ input PostUpdateArgs {
 input PostCreateInput {
   title: String
   description: String
+  status: PostStatusType
   video: FileFieldInput
   tags: TagRelateToManyForCreateInput
   author: UserRelateToOneForCreateInput
