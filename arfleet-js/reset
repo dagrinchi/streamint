@@ -1,0 +1,17 @@
+rm -rf ~/.arfleet-client
+rm -rf ~/.arfleet-provider
+rm backend/src/migrations/*
+mkdir -p ~/.arfleet-client
+mkdir -p ~/.arfleet-provider
+./arfleet client makemigration
+./arfleet client migrate
+./arfleet provider migrate
+if [ -f ./_local/keys/client.json ]; then
+  cp ./_local/keys/client.json ~/.arfleet-client/wallet.json
+fi
+
+if [ -f ./_local/keys/provider.json ]; then
+  cp ./_local/keys/provider.json ~/.arfleet-provider/wallet.json
+fi
+
+echo "Done"

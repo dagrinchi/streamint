@@ -1,0 +1,17 @@
+#!/usr/bin/env node
+
+const { spawn } = require('child_process');
+
+// Pass arguments
+const args = process.argv.slice(2);
+
+// First argument to arfleet
+const mode = args[0];
+
+// Start backend
+const backend = spawn('node', ['backend/src/index.js', ...args], { stdio: 'inherit' });
+
+// Start frontend
+if ((mode === 'client' || mode === 'provider') && !args.includes('store') && !args.includes('makemigration') && !args.includes('migrate') && !args.includes('transferpass')) {
+    const frontend = spawn('node', ['frontend/src/index.js', ...args], { stdio: 'inherit' });
+}
