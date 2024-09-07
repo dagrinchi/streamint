@@ -12,14 +12,25 @@ generator client {
 }
 
 model User {
-  id        String    @id @default(cuid())
-  name      String    @default("")
-  email     String    @unique @default("")
-  password  String
-  role      String    @default("[]")
-  ads       Ad[]      @relation("Ad_author")
-  posts     Post[]    @relation("Post_author")
-  createdAt DateTime? @default(now())
+  id               String    @id @default(cuid())
+  name             String    @default("")
+  email            String    @unique @default("")
+  password         String
+  role             String    @default("[]")
+  createdAt        DateTime? @default(now())
+  from_Wallet_user Wallet[]  @relation("Wallet_user")
+  from_Ad_author   Ad[]      @relation("Ad_author")
+  from_Post_author Post[]    @relation("Post_author")
+}
+
+model Wallet {
+  id        String  @id @default(cuid())
+  user      User?   @relation("Wallet_user", fields: [userId], references: [id])
+  userId    String? @map("user")
+  address   String  @default("")
+  publickey String  @default("")
+
+  @@index([userId])
 }
 
 model Ad {

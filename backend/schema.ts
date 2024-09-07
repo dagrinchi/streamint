@@ -1,4 +1,5 @@
 import { list } from '@keystone-6/core'
+import { allowAll } from '@keystone-6/core/access'
 
 import {
   text,
@@ -11,7 +12,6 @@ import {
   calendarDay,
 } from '@keystone-6/core/fields'
 
-import { document } from '@keystone-6/fields-document'
 import { type Lists } from '.keystone/types'
 
 type Session = {
@@ -46,12 +46,18 @@ export const lists = {
           { label: 'Viewer', value: 'ROLE_VIEWER' },
         ]
       }),
-      ads: relationship({ ref: 'Ad.author', many: true, ui: { hideCreate: true, displayMode: 'count' } }),
-      posts: relationship({ ref: 'Post.author', many: true, ui: { hideCreate: true, displayMode: 'count' } }),
       createdAt: timestamp({
         defaultValue: { kind: 'now' },
       }),
     },
+  }),
+  Wallet: list({
+    access: allowAll,
+    fields: {
+      user: relationship({ ref: 'User', many: false, ui: { hideCreate: true } }),
+      address: text({ validation: { isRequired: true } }),
+      publickey: text({ validation: { isRequired: true } }),
+    }
   }),
   Ad: list({
     access: isAdManager,
@@ -86,7 +92,7 @@ export const lists = {
         },
       }),
       author: relationship({
-        ref: 'User.ads',
+        ref: 'User',
         ui: {
           displayMode: 'cards',
           cardFields: ['name', 'email'],
@@ -125,7 +131,7 @@ export const lists = {
         },
       }),
       author: relationship({
-        ref: 'User.posts',
+        ref: 'User',
         ui: {
           displayMode: 'cards',
           cardFields: ['name', 'email'],

@@ -7,10 +7,6 @@ type User {
   email: String
   password: PasswordState
   role: [UserRoleType!]
-  ads(where: AdWhereInput! = {}, orderBy: [AdOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AdWhereUniqueInput): [Ad!]
-  adsCount(where: AdWhereInput! = {}): Int
-  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
-  postsCount(where: PostWhereInput! = {}): Int
   createdAt: DateTime
 }
 
@@ -39,8 +35,6 @@ input UserWhereInput {
   id: IDFilter
   name: StringFilter
   email: StringFilter
-  ads: AdManyRelationFilter
-  posts: PostManyRelationFilter
   createdAt: DateTimeNullableFilter
 }
 
@@ -83,18 +77,6 @@ input NestedStringFilter {
   not: NestedStringFilter
 }
 
-input AdManyRelationFilter {
-  every: AdWhereInput
-  some: AdWhereInput
-  none: AdWhereInput
-}
-
-input PostManyRelationFilter {
-  every: PostWhereInput
-  some: PostWhereInput
-  none: PostWhereInput
-}
-
 input DateTimeNullableFilter {
   equals: DateTime
   in: [DateTime!]
@@ -123,23 +105,7 @@ input UserUpdateInput {
   email: String
   password: String
   role: [UserRoleType!]
-  ads: AdRelateToManyForUpdateInput
-  posts: PostRelateToManyForUpdateInput
   createdAt: DateTime
-}
-
-input AdRelateToManyForUpdateInput {
-  disconnect: [AdWhereUniqueInput!]
-  set: [AdWhereUniqueInput!]
-  create: [AdCreateInput!]
-  connect: [AdWhereUniqueInput!]
-}
-
-input PostRelateToManyForUpdateInput {
-  disconnect: [PostWhereUniqueInput!]
-  set: [PostWhereUniqueInput!]
-  create: [PostCreateInput!]
-  connect: [PostWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -152,19 +118,62 @@ input UserCreateInput {
   email: String
   password: String
   role: [UserRoleType!]
-  ads: AdRelateToManyForCreateInput
-  posts: PostRelateToManyForCreateInput
   createdAt: DateTime
 }
 
-input AdRelateToManyForCreateInput {
-  create: [AdCreateInput!]
-  connect: [AdWhereUniqueInput!]
+type Wallet {
+  id: ID!
+  user: User
+  address: String
+  publickey: String
 }
 
-input PostRelateToManyForCreateInput {
-  create: [PostCreateInput!]
-  connect: [PostWhereUniqueInput!]
+input WalletWhereUniqueInput {
+  id: ID
+}
+
+input WalletWhereInput {
+  AND: [WalletWhereInput!]
+  OR: [WalletWhereInput!]
+  NOT: [WalletWhereInput!]
+  id: IDFilter
+  user: UserWhereInput
+  address: StringFilter
+  publickey: StringFilter
+}
+
+input WalletOrderByInput {
+  id: OrderDirection
+  address: OrderDirection
+  publickey: OrderDirection
+}
+
+input WalletUpdateInput {
+  user: UserRelateToOneForUpdateInput
+  address: String
+  publickey: String
+}
+
+input UserRelateToOneForUpdateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
+  disconnect: Boolean
+}
+
+input WalletUpdateArgs {
+  where: WalletWhereUniqueInput!
+  data: WalletUpdateInput!
+}
+
+input WalletCreateInput {
+  user: UserRelateToOneForCreateInput
+  address: String
+  publickey: String
+}
+
+input UserRelateToOneForCreateInput {
+  create: UserCreateInput
+  connect: UserWhereUniqueInput
 }
 
 type Ad {
@@ -270,12 +279,6 @@ input TagRelateToManyForUpdateInput {
   connect: [TagWhereUniqueInput!]
 }
 
-input UserRelateToOneForUpdateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
-  disconnect: Boolean
-}
-
 input AdUpdateArgs {
   where: AdWhereUniqueInput!
   data: AdUpdateInput!
@@ -295,11 +298,6 @@ input AdCreateInput {
 input TagRelateToManyForCreateInput {
   create: [TagCreateInput!]
   connect: [TagWhereUniqueInput!]
-}
-
-input UserRelateToOneForCreateInput {
-  create: UserCreateInput
-  connect: UserWhereUniqueInput
 }
 
 type Post {
@@ -395,6 +393,18 @@ input TagWhereInput {
   posts: PostManyRelationFilter
 }
 
+input AdManyRelationFilter {
+  every: AdWhereInput
+  some: AdWhereInput
+  none: AdWhereInput
+}
+
+input PostManyRelationFilter {
+  every: PostWhereInput
+  some: PostWhereInput
+  none: PostWhereInput
+}
+
 input TagOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -406,6 +416,20 @@ input TagUpdateInput {
   posts: PostRelateToManyForUpdateInput
 }
 
+input AdRelateToManyForUpdateInput {
+  disconnect: [AdWhereUniqueInput!]
+  set: [AdWhereUniqueInput!]
+  create: [AdCreateInput!]
+  connect: [AdWhereUniqueInput!]
+}
+
+input PostRelateToManyForUpdateInput {
+  disconnect: [PostWhereUniqueInput!]
+  set: [PostWhereUniqueInput!]
+  create: [PostCreateInput!]
+  connect: [PostWhereUniqueInput!]
+}
+
 input TagUpdateArgs {
   where: TagWhereUniqueInput!
   data: TagUpdateInput!
@@ -415,6 +439,16 @@ input TagCreateInput {
   name: String
   ads: AdRelateToManyForCreateInput
   posts: PostRelateToManyForCreateInput
+}
+
+input AdRelateToManyForCreateInput {
+  create: [AdCreateInput!]
+  connect: [AdWhereUniqueInput!]
+}
+
+input PostRelateToManyForCreateInput {
+  create: [PostCreateInput!]
+  connect: [PostWhereUniqueInput!]
 }
 
 """
@@ -429,6 +463,12 @@ type Mutation {
   updateUsers(data: [UserUpdateArgs!]!): [User]
   deleteUser(where: UserWhereUniqueInput!): User
   deleteUsers(where: [UserWhereUniqueInput!]!): [User]
+  createWallet(data: WalletCreateInput!): Wallet
+  createWallets(data: [WalletCreateInput!]!): [Wallet]
+  updateWallet(where: WalletWhereUniqueInput!, data: WalletUpdateInput!): Wallet
+  updateWallets(data: [WalletUpdateArgs!]!): [Wallet]
+  deleteWallet(where: WalletWhereUniqueInput!): Wallet
+  deleteWallets(where: [WalletWhereUniqueInput!]!): [Wallet]
   createAd(data: AdCreateInput!): Ad
   createAds(data: [AdCreateInput!]!): [Ad]
   updateAd(where: AdWhereUniqueInput!, data: AdUpdateInput!): Ad
@@ -474,6 +514,9 @@ type Query {
   user(where: UserWhereUniqueInput!): User
   users(where: UserWhereInput! = {}, orderBy: [UserOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: UserWhereUniqueInput): [User!]
   usersCount(where: UserWhereInput! = {}): Int
+  wallet(where: WalletWhereUniqueInput!): Wallet
+  wallets(where: WalletWhereInput! = {}, orderBy: [WalletOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: WalletWhereUniqueInput): [Wallet!]
+  walletsCount(where: WalletWhereInput! = {}): Int
   ad(where: AdWhereUniqueInput!): Ad
   ads(where: AdWhereInput! = {}, orderBy: [AdOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: AdWhereUniqueInput): [Ad!]
   adsCount(where: AdWhereInput! = {}): Int
