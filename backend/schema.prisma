@@ -17,20 +17,18 @@ model User {
   email            String    @unique @default("")
   password         String
   role             String    @default("[]")
+  wallet           Wallet?   @relation("User_wallet", fields: [walletId], references: [id])
+  walletId         String?   @unique @map("wallet")
   createdAt        DateTime? @default(now())
-  from_Wallet_user Wallet[]  @relation("Wallet_user")
   from_Ad_author   Ad[]      @relation("Ad_author")
   from_Post_author Post[]    @relation("Post_author")
 }
 
 model Wallet {
-  id        String  @id @default(cuid())
-  user      User?   @relation("Wallet_user", fields: [userId], references: [id])
-  userId    String? @map("user")
-  address   String  @default("")
-  publickey String  @default("")
-
-  @@index([userId])
+  id        String @id @default(cuid())
+  user      User?  @relation("User_wallet")
+  address   String @default("")
+  publickey String @default("")
 }
 
 model Ad {
@@ -59,6 +57,7 @@ model Post {
   tags           Tag[]   @relation("Post_tags")
   author         User?   @relation("Post_author", fields: [authorId], references: [id])
   authorId       String? @map("author")
+  assignment     String?
 
   @@index([authorId])
 }

@@ -7,6 +7,7 @@ type User {
   email: String
   password: PasswordState
   role: [UserRoleType!]
+  wallet: Wallet
   createdAt: DateTime
 }
 
@@ -35,6 +36,7 @@ input UserWhereInput {
   id: IDFilter
   name: StringFilter
   email: StringFilter
+  wallet: WalletWhereInput
   createdAt: DateTimeNullableFilter
 }
 
@@ -105,7 +107,14 @@ input UserUpdateInput {
   email: String
   password: String
   role: [UserRoleType!]
+  wallet: WalletRelateToOneForUpdateInput
   createdAt: DateTime
+}
+
+input WalletRelateToOneForUpdateInput {
+  create: WalletCreateInput
+  connect: WalletWhereUniqueInput
+  disconnect: Boolean
 }
 
 input UserUpdateArgs {
@@ -118,7 +127,13 @@ input UserCreateInput {
   email: String
   password: String
   role: [UserRoleType!]
+  wallet: WalletRelateToOneForCreateInput
   createdAt: DateTime
+}
+
+input WalletRelateToOneForCreateInput {
+  create: WalletCreateInput
+  connect: WalletWhereUniqueInput
 }
 
 type Wallet {
@@ -309,12 +324,35 @@ type Post {
   tags(where: TagWhereInput! = {}, orderBy: [TagOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: TagWhereUniqueInput): [Tag!]
   tagsCount(where: TagWhereInput! = {}): Int
   author: User
+  assignment: JSON
+  placements: [AssignmentPlacements]
 }
 
 enum PostStatusType {
   DRAFT
   IN_PROGRESS
-  PUBLISHED
+  ASSIGNMENT
+}
+
+type AssignmentPlacements {
+  id: String
+  assignment_id: String
+  provider_id: String
+  provider_connection_strings: [String]
+  merkle_root: String
+  merkle_tree: [String]
+  process_id: String
+  private_key: String
+  public_key: String
+  expires: String
+  is_funded: Boolean
+  required_reward: Int
+  required_collateral: Int
+  error_was: String
+  status: String
+  created_at: String
+  updated_at: String
+  AssignmentId: String
 }
 
 input PostWhereUniqueInput {
@@ -354,6 +392,7 @@ input PostUpdateInput {
   video: FileFieldInput
   tags: TagRelateToManyForUpdateInput
   author: UserRelateToOneForUpdateInput
+  assignment: JSON
 }
 
 input PostUpdateArgs {
@@ -368,6 +407,7 @@ input PostCreateInput {
   video: FileFieldInput
   tags: TagRelateToManyForCreateInput
   author: UserRelateToOneForCreateInput
+  assignment: JSON
 }
 
 type Tag {

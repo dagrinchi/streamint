@@ -1,4 +1,4 @@
-import { list } from '@keystone-6/core'
+import { list, graphql } from '@keystone-6/core'
 import { allowAll } from '@keystone-6/core/access'
 import path from 'path'
 
@@ -11,6 +11,8 @@ import {
   multiselect,
   file,
   calendarDay,
+  virtual,
+  json,
 } from '@keystone-6/core/fields'
 
 import { type Lists } from '.keystone/types'
@@ -22,6 +24,27 @@ type Session = {
     role: string[];
     createdAt: string;
   }
+}
+
+type AssignmentPlacements = {
+  id: string;
+  assignment_id: string;
+  provider_id: string;
+  provider_connection_strings: string[];
+  merkle_root: string;
+  merkle_tree: string[];
+  process_id: string;
+  private_key: string;
+  public_key: string;
+  expires?: string;
+  is_funded: boolean;
+  required_reward: number;
+  required_collateral: number;
+  error_was?: string;
+  status: string;
+  created_at: string;
+  updated_at: string;
+  AssignmentId: string;
 }
 
 const isAdmin = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_ADMIN'));
@@ -47,6 +70,7 @@ export const lists = {
           { label: 'Viewer', value: 'ROLE_VIEWER' },
         ]
       }),
+      wallet: relationship({ ref: 'Wallet.user', many: false, ui: { hideCreate: true } }),
       createdAt: timestamp({
         defaultValue: { kind: 'now' },
       }),
@@ -55,7 +79,7 @@ export const lists = {
   Wallet: list({
     access: allowAll,
     fields: {
-      user: relationship({ ref: 'User', many: false, ui: { hideCreate: true } }),
+      user: relationship({ ref: 'User.wallet', many: false, ui: { hideCreate: true } }),
       address: text({ validation: { isRequired: true } }),
       publickey: text({ validation: { isRequired: true } }),
     }
@@ -115,7 +139,7 @@ export const lists = {
         options: [
           { label: 'Draft', value: 'DRAFT' },
           { label: 'Progress', value: 'IN_PROGRESS' },
-          { label: 'Published', value: 'PUBLISHED' },
+          { label: 'Assignment', value: 'ASSIGNMENT' },
         ]
       }),
       video: file({ storage: 'local_files_storage' }),
@@ -141,13 +165,74 @@ export const lists = {
           inlineConnect: true,
         },
         many: false,
-      })
+      }),
+      assignment: json(),
+      placements: virtual({
+        ui: { query: '{ id status provider_id provider_connection_strings error_was created_at updated_at }' },
+        field: graphql.field({
+          type: graphql.list(graphql.object<AssignmentPlacements>()({
+            name: 'AssignmentPlacements',
+            fields: {
+              id: graphql.field({ type: graphql.String }),
+              assignment_id: graphql.field({ type: graphql.String }),
+              provider_id: graphql.field({ type: graphql.String }),
+              provider_connection_strings: graphql.field({ type: graphql.list(graphql.String) }),
+              merkle_root: graphql.field({ type: graphql.String }),
+              merkle_tree: graphql.field({ type: graphql.list(graphql.String) }),
+              process_id: graphql.field({ type: graphql.String }),
+              private_key: graphql.field({ type: graphql.String }),
+              public_key: graphql.field({ type: graphql.String }),
+              expires: graphql.field({ type: graphql.String }),
+              is_funded: graphql.field({ type: graphql.Boolean }),
+              required_reward: graphql.field({ type: graphql.Int }),
+              required_collateral: graphql.field({ type: graphql.Int }),
+              error_was: graphql.field({ type: graphql.String }),
+              status: graphql.field({ type: graphql.String }),
+              created_at: graphql.field({ type: graphql.String }),
+              updated_at: graphql.field({ type: graphql.String }),
+              AssignmentId: graphql.field({ type: graphql.String }),
+            },
+          })),
+          async resolve({ assignment, authorId }, args, context) {
+            if (!assignment) return []
+            const { assignmentId } = JSON.parse(assignment);
+            const user = await context.query.User.findOne({ where: { id: authorId }, query: 'id wallet { publickey }' })
+            const jwk = btoa(JSON.stringify({
+              e: "AQAB",
+              ext: true,
+              kty: "RSA",
+              n: user.wallet.publickey
+            }))
+            const res = await fetch(`http://localhost:8885/api/placements/${assignmentId}`, {
+              method: 'POST',
+              body: JSON.stringify({ jwk }),
+              headers: { 'Content-Type': 'application/json' }
+            })
+            const json = await res.json()
+            return json.placement;
+          },
+        }),
+      }),
     },
     hooks: {
-      afterOperation: ({ operation, item }) => {
-        if ((operation === 'create' || operation === 'update') && item.video_filename) {
+      afterOperation: async ({ operation, item, context }) => {
+        if ((operation === 'create' || operation === 'update') && item.video_filename && item.status === 'DRAFT') {
+          await context.query.Post.updateOne({ where: { id: item.id }, data: { status: 'IN_PROGRESS' } })
           const video_fullpath = path.join(path.resolve(__dirname, '..'), 'public/files', item.video_filename)
-          
+          const user = await context.query.User.findOne({ where: { id: item.authorId }, query: 'id wallet { publickey }' })
+          const jwk = btoa(JSON.stringify({
+            e: "AQAB",
+            ext: true,
+            kty: "RSA",
+            n: user.wallet.publickey
+          }))
+          const res = await fetch('http://localhost:8885/store', {
+            method: 'POST',
+            body: JSON.stringify({ path: video_fullpath, jwk }),
+            headers: { 'Content-Type': 'application/json' }
+          })
+          const json = await res.json()
+          await context.query.Post.updateOne({ where: { id: item.id }, data: { assignment: json, status: 'ASSIGNMENT' } })
         }
       }
     }
