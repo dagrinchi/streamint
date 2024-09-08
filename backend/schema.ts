@@ -1,5 +1,4 @@
 import { list, graphql } from '@keystone-6/core'
-import { allowAll } from '@keystone-6/core/access'
 import path from 'path'
 
 import {
@@ -19,6 +18,7 @@ import { type Lists } from '.keystone/types'
 
 type Session = {
   data: {
+    id: string;
     name: string;
     email: string;
     role: string[];
@@ -50,6 +50,9 @@ type AssignmentPlacements = {
 const isAdmin = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_ADMIN'));
 const isAdManager = ({ session }: { session?: Session }) => isAdmin({ session }) || Boolean(session?.data.role.includes('ROLE_AD_MANAGER'));
 const isContentCreator = ({ session }: { session?: Session }) => isAdmin({ session }) || Boolean(session?.data.role.includes('ROLE_CONTENT_CREATOR'));
+const isLogged = ({ session }: { session?: Session }) => Boolean(session);
+const isMyWallet = ({ session }: { session?: Session }) => ({ user: { id: { equals: session?.data.id } } })
+const isMyContent = ({ session }: { session?: Session }) => ({ author: { id: { equals: session?.data.id } } })
 
 export const lists = {
   User: list({
@@ -77,7 +80,14 @@ export const lists = {
     },
   }),
   Wallet: list({
-    access: allowAll,
+    access: {
+      operation: isLogged,
+      filter: {
+        query: isMyWallet,
+        update: isMyWallet,
+        delete: isMyWallet,
+      }
+    },
     fields: {
       user: relationship({ ref: 'User.wallet', many: false, ui: { hideCreate: true } }),
       address: text({ validation: { isRequired: true } }),
@@ -85,7 +95,13 @@ export const lists = {
     }
   }),
   Ad: list({
-    access: isAdManager,
+    access: {
+      operation: isAdManager,
+      filter: {
+        update: isMyContent,
+        delete: isMyContent,
+      }
+    },
     fields: {
       title: text({ validation: { isRequired: true } }),
       starts: calendarDay({
@@ -130,7 +146,13 @@ export const lists = {
     }
   }),
   Post: list({
-    access: isContentCreator,
+    access: {
+      operation: isContentCreator,
+      filter: {
+        update: isMyContent,
+        delete: isMyContent,
+      }
+    },
     fields: {
       title: text({ validation: { isRequired: true } }),
       description: text(),
