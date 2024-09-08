@@ -6,10 +6,17 @@ module.exports = {
     "./src/app/**/*.{js,ts,jsx,tsx,mdx}",
   ],
   theme: {
+    fontFamily: {
+      'helveticaneue': ['var(--font-helveticaneue)'],
+      'blinkmacsystemfont-black': ['var(--font-blinkmacsystemfont-black)'],
+    },
     extend: {
       colors: {
         background: "var(--background)",
         foreground: "var(--foreground)",
+      },
+      aspectRatio: {
+        '9/16': '9 / 16'
       },
     },
   },
