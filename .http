@@ -10,7 +10,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{arfleetBaseUrl}}/api/assignments/1a5b39dcc5fe60a75c073220e897980fd7917105b69647355cfd783d53bd3e9f
+POST {{arfleetBaseUrl}}/api/assignments/b2fa08a578779aad2f8112ea3705e373af7a9f03f1eb843e90710af6f53c8738
 Content-Type: application/json
 
 {
@@ -18,7 +18,7 @@ Content-Type: application/json
 }
 
 ###
-POST {{arfleetBaseUrl}}/api/placements/1a5b39dcc5fe60a75c073220e897980fd7917105b69647355cfd783d53bd3e9f
+POST {{arfleetBaseUrl}}/api/placements/b2fa08a578779aad2f8112ea3705e373af7a9f03f1eb843e90710af6f53c8738
 Content-Type: application/json
 
 {
