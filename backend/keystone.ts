@@ -12,6 +12,7 @@ export default withAuth(
     },
     lists,
     session,
+    server: { cors: { origin: '*' } },
     storage: {
       local_files_storage: {
         kind: 'local',
