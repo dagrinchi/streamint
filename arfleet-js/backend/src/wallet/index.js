@@ -4,13 +4,13 @@ const utils = require('../utils');
 const config = require('../config');
 
 class Wallet {
-    constructor(path) {
-        this.walletPath = path;
+    constructor(jwk) {
         this._address = null;
+        this._jwk = jwk;
     }
 
     readPrivateKey() {
-        return fs.readFileSync(this.walletPath, 'utf8');
+        return this._jwk;
     }
 
     async getAddress() {
@@ -27,19 +27,8 @@ class Wallet {
     }
 }
 
-const createWallet = async(path) => {
-    const key = await arweave.wallets.generate();
-    fs.writeFileSync(path, JSON.stringify(key));
-};
-
-const initWallet = async() => {
-    const walletPath = utils.getDatadir(config.walletPath);
-
-    if (!fs.existsSync(walletPath)) {
-        await createWallet(walletPath);
-    }
-
-    return new Wallet(walletPath);
+const initWallet = async (jwk) => {
+    return new Wallet(jwk);
 };
 
 module.exports = {

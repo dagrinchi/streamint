@@ -1,18 +1,35 @@
 @arfleetBaseUrl = http://localhost:8885
+@keydata = {{$dotenv KEYDATA}}
 
 ###
-GET {{arfleetBaseUrl}}/api/assignments
+POST {{arfleetBaseUrl}}/api/assignments
+Content-Type: application/json
+
+{
+  "jwk": "{{keydata}}"
+}
 
 ###
-GET {{arfleetBaseUrl}}/api/assignments/219c2f9b98897d0d21c612a40220564cbd85861af1a7d2ea3066f7346d05d584
+POST {{arfleetBaseUrl}}/api/assignments/1a5b39dcc5fe60a75c073220e897980fd7917105b69647355cfd783d53bd3e9f
+Content-Type: application/json
+
+{
+  "jwk": "{{keydata}}"
+}
 
 ###
-GET {{arfleetBaseUrl}}/api/placements/219c2f9b98897d0d21c612a40220564cbd85861af1a7d2ea3066f7346d05d584
+POST {{arfleetBaseUrl}}/api/placements/1a5b39dcc5fe60a75c073220e897980fd7917105b69647355cfd783d53bd3e9f
+Content-Type: application/json
+
+{
+  "jwk": "{{keydata}}"
+}
 
 ###
 POST {{arfleetBaseUrl}}/store
 Content-Type: application/json
 
 {
-  "path": "/home/wdalmeciga/tests/helloworld.txt"
+  "path": "/home/wdalmeciga/development/keystone-projects/streamint/backend/public/files/6003997-hd-720-1280-30fps-xqg8vgtWF0fVPK-lz4IEGw.mp4",
+  "jwk": "{{keydata}}"
 }

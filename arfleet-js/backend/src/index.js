@@ -117,8 +117,8 @@ const { checkPasses, hasPass } = require('./arweave/passes');
     }
 
     // Init wallet
-    const { initWallet } = require('./wallet');
-    const wallet = await initWallet();
+    // const { initWallet } = require('./wallet');
+    // const wallet = await initWallet();
 
     // Transfer pass mode
     if (process.env.SUBMODE && process.env.SUBMODE === 'transferpass') {
@@ -171,8 +171,8 @@ const { checkPasses, hasPass } = require('./arweave/passes');
     // Start client/provider
     switch(process.env.MODE) {
         case 'client':
-            const getClientInstance = require('./client');
-            getClientInstance({ wallet });
+            // const getClientInstance = require('./client');
+            // getClientInstance({ wallet });
             break;
 
         case 'provider':

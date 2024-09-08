@@ -4,6 +4,15 @@ const deployer = require('../client/deployer');
 
 const apiStore = async(req, res) => {
     try {
+        const data = req.body.jwk;
+
+        const jwk = atob(data);
+        const { initWallet } = require('../wallet');
+        const wallet = await initWallet(jwk);
+
+        const getClientInstance = require('../client');
+        const client = getClientInstance({ wallet });
+        
         const path = req.body.path;
         console.log("Storing path:", path);
 

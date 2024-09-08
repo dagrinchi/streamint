@@ -1,5 +1,6 @@
 import { list } from '@keystone-6/core'
 import { allowAll } from '@keystone-6/core/access'
+import path from 'path'
 
 import {
   text,
@@ -24,8 +25,8 @@ type Session = {
 }
 
 const isAdmin = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_ADMIN'));
-const isAdManager = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_AD_MANAGER'));
-const isContentCreator = ({ session }: { session?: Session }) => Boolean(session?.data.role.includes('ROLE_CONTENT_CREATOR'));
+const isAdManager = ({ session }: { session?: Session }) => isAdmin({ session }) || Boolean(session?.data.role.includes('ROLE_AD_MANAGER'));
+const isContentCreator = ({ session }: { session?: Session }) => isAdmin({ session }) || Boolean(session?.data.role.includes('ROLE_CONTENT_CREATOR'));
 
 export const lists = {
   User: list({
@@ -142,6 +143,14 @@ export const lists = {
         many: false,
       })
     },
+    hooks: {
+      afterOperation: ({ operation, item }) => {
+        if ((operation === 'create' || operation === 'update') && item.video_filename) {
+          const video_fullpath = path.join(path.resolve(__dirname, '..'), 'public/files', item.video_filename)
+          
+        }
+      }
+    }
   }),
   Tag: list({
     access: isContentCreator,

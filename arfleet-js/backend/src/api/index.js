@@ -19,23 +19,44 @@ const startApi = async() => {
         const { apiStore } = require('../client/apiStore');
         app.post('/store', apiStore);
 
-        app.get('/api/assignments', async(req, res) => {
+        app.post('/api/assignments', async(req, res) => {
+            const data = req.body.jwk;
+
+            const jwk = atob(data);
+            const { initWallet } = require('../wallet');
+            const wallet = await initWallet(jwk);
+
             const getClientInstance = require('../client');
-            const client = getClientInstance();
+            const client = getClientInstance({ wallet });
+
             const assignments = await client.getAssignments();
             res.send({ assignments: assignments });
         });
 
-        app.get('/api/assignments/:id', async(req, res) => {
+        app.post('/api/assignments/:id', async(req, res) => {
+            const data = req.body.jwk;
+
+            const jwk = atob(data);
+            const { initWallet } = require('../wallet');
+            const wallet = await initWallet(jwk);
+
             const getClientInstance = require('../client');
-            const client = getClientInstance();
+            const client = getClientInstance({ wallet });
+
             const placements = await client.getAssignments(req.params.id);
             res.send({ placements: placements });
         });
 
-        app.get('/api/placements/:id', async(req, res) => {
+        app.post('/api/placements/:id', async(req, res) => {
+            const data = req.body.jwk;
+
+            const jwk = atob(data);
+            const { initWallet } = require('../wallet');
+            const wallet = await initWallet(jwk);
+
             const getClientInstance = require('../client');
-            const client = getClientInstance();
+            const client = getClientInstance({ wallet });
+            
             const placement = await client.getPlacements(req.params.id);
             res.send({ placement: placement });
         });
