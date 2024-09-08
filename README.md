@@ -5,7 +5,7 @@
 
 Create a descentralized video platform, enable direct transactions between content creators, video distributors and publishers.
 
-First run the arfleet client with:
+1. First run the arfleet client with:
 
 ```
 cd ./arfleet-js/backend
@@ -15,7 +15,7 @@ cd ../
 ./arfleet client
 ```
 
-Then, for running development backend project:
+2. Then, for running development backend project:
 
 
 ```
@@ -25,7 +25,9 @@ npm install
 npm run dev
 ```
 
-And finally, for running development frontend project
+3. Visit: [http://localhost:3000](http://localhost:3000) for video administration
+
+4. And finally, for running development frontend project
 
 
 ```
@@ -34,6 +36,8 @@ nvm use
 npm install
 npm run dev
 ```
+
+5. Visit: [http://localhost:8080](http://localhost:8080) for video scrolling visualization
 
 ### Libraries
 
