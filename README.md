@@ -3,9 +3,19 @@
 
 ### The idea
 
-Create a descentralized video monetization, enable direct transactions between content creators, video distributors and publishers.
+Create a descentralized video platform, enable direct transactions between content creators, video distributors and publishers.
 
-For running development backend project
+First run the arfleet client with:
+
+```
+cd ./arfleet-js/backend
+nvm use
+npm install
+cd ../
+./arfleet client
+```
+
+Then, for running development backend project:
 
 
 ```
@@ -15,7 +25,7 @@ npm install
 npm run dev
 ```
 
-For running development frontend project
+And finally, for running development frontend project
 
 
 ```
@@ -24,6 +34,16 @@ nvm use
 npm install
 npm run dev
 ```
+
+### Libraries
+
+I'm using mainly [keystonejs](https://keystonejs.com/), [NextJS](https://nextjs.org/), [arweave-wallet-kit](https://docs.arweavekit.com/wallets/wallet-kit) and [ArFleet](https://github.com/aoacc/arfleet-js)
+
+
+### What's next
+
+I would like to explore LUA and [Autonomous Finance](https://www.autonomous.finance/) to automate the videos monetization process.
+
 
 Wilson David Alméciga
 
