@@ -7,7 +7,7 @@ const VideoPlayer = dynamic(() => import('streamint/components/VideoPlayer'), { 
 export default function Item({ data }) {
   return (
     <article className="snap-start grid grid-rows-2 grid-cols-1 lg:grid-cols-2 lg:grid-rows-1 h-[95%] max-h-screen">
-      <div className="p-4 flex flex-col justify-end items-end">        
+      <div className="p-4 flex flex-col justify-end items-end">
         <h2 className="font-blinkmacsystemfont-black text-xl mb-3">{data.title}</h2>
         <p className="text-right mb-3 max-w-lg">{data.description}</p>
         <p>
@@ -15,7 +15,19 @@ export default function Item({ data }) {
             data.tags.map((tag, index) => <span key={index}>[{tag.name}] </span>)
           }
         </p>
-        <div className="pb-24"></div>        
+        {
+          (data.placements?.length > 0) && (
+            <>
+              <h3 className="font-blinkmacsystemfont-black text-xl mb-3">ArFleet Placements:</h3>
+              {data.placements.map((p, index) => (
+                <>
+                  <p key={index}>[{p.provider_connection_strings}]</p>
+                </>
+              ))}              
+            </>
+          )
+        }
+        <div className="pb-24"></div>
       </div>
       <div className="p-4 lg:pt-4">
         <div className="h-full relative aspect-9/16 overflow-hidden rounded-lg mx-auto lg:mx-0">
