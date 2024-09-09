@@ -22,7 +22,8 @@ export default function StoreWallet() {
       const wres = await fetch('/api/graphql', {
         method: 'POST',
         body: JSON.stringify({ "query": "query Wallets {\n  walletsCount\n}\n", "variables": {}, "operationName": "Wallets" }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin'
       })
       const wjson = await wres.json()
       setWalletStored(wjson.data.walletsCount)
@@ -30,7 +31,8 @@ export default function StoreWallet() {
       const ures = await fetch('/api/graphql', {
         method: 'POST',
         body: JSON.stringify({ "query": "query Query {\r\n  authenticatedItem {\r\n    ... on User {\r\n      email\r\n    }\r\n  }\r\n}", "variables": {}, "operationName": "Query" }),
-        headers: { 'Content-Type': 'application/json' }
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'same-origin'
       })
       const ujson = await ures.json()
       setUserEmail(ujson.data.authenticatedItem.email)
@@ -48,7 +50,8 @@ export default function StoreWallet() {
     const res = await fetch('/api/graphql', {
       method: 'POST',
       body: JSON.stringify({ "query": "mutation Mutation($data: WalletCreateInput!) {\r\n  createWallet(data: $data) {\r\n    id\r\n    address\r\n  }\r\n}\r\n", "variables": { "data": { "address": address, "publickey": publicKey, "user": { "connect": { "email": userEmail } } } }, "operationName": "Mutation" }),
-      headers: { 'Content-Type': 'application/json' }
+      headers: { 'Content-Type': 'application/json' },
+      credentials: 'same-origin'
     })
     await res.json()
     setLoading(false)

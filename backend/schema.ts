@@ -53,10 +53,18 @@ const isContentCreator = ({ session }: { session?: Session }) => isAdmin({ sessi
 const isLogged = ({ session }: { session?: Session }) => Boolean(session);
 const isMyWallet = ({ session }: { session?: Session }) => ({ user: { id: { equals: session?.data.id } } })
 const isMyContent = ({ session }: { session?: Session }) => ({ author: { id: { equals: session?.data.id } } })
+const isMe = ({ session }: { session?: Session }) => ({ id: { equals: session?.data.id } })
 
 export const lists = {
   User: list({
-    access: isAdmin,
+    access: {
+      operation: isLogged,
+      filter: {
+        query: isMe,
+        update: isMe,
+        delete: isMe,
+      }
+    },
     fields: {
       name: text({ validation: { isRequired: true } }),
       email: text({
