@@ -74,6 +74,7 @@ export const lists = {
         ]
       }),
       wallet: relationship({ ref: 'Wallet.user', many: false, ui: { hideCreate: true } }),
+      posts: relationship({ ref: 'Post.author', many: true, ui: { hideCreate: true } }),
       createdAt: timestamp({
         defaultValue: { kind: 'now' },
       }),
@@ -178,7 +179,7 @@ export const lists = {
         },
       }),
       author: relationship({
-        ref: 'User',
+        ref: 'User.posts',
         ui: {
           displayMode: 'cards',
           cardFields: ['name', 'email'],
@@ -234,6 +235,9 @@ export const lists = {
             return json.placement;
           },
         }),
+      }),
+      createdAt: timestamp({
+        defaultValue: { kind: 'now' },
       }),
     },
     hooks: {

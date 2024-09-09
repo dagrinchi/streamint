@@ -8,6 +8,8 @@ type User {
   password: PasswordState
   role: [UserRoleType!]
   wallet: Wallet
+  posts(where: PostWhereInput! = {}, orderBy: [PostOrderByInput!]! = [], take: Int, skip: Int! = 0, cursor: PostWhereUniqueInput): [Post!]
+  postsCount(where: PostWhereInput! = {}): Int
   createdAt: DateTime
 }
 
@@ -37,6 +39,7 @@ input UserWhereInput {
   name: StringFilter
   email: StringFilter
   wallet: WalletWhereInput
+  posts: PostManyRelationFilter
   createdAt: DateTimeNullableFilter
 }
 
@@ -79,6 +82,12 @@ input NestedStringFilter {
   not: NestedStringFilter
 }
 
+input PostManyRelationFilter {
+  every: PostWhereInput
+  some: PostWhereInput
+  none: PostWhereInput
+}
+
 input DateTimeNullableFilter {
   equals: DateTime
   in: [DateTime!]
@@ -108,6 +117,7 @@ input UserUpdateInput {
   password: String
   role: [UserRoleType!]
   wallet: WalletRelateToOneForUpdateInput
+  posts: PostRelateToManyForUpdateInput
   createdAt: DateTime
 }
 
@@ -115,6 +125,13 @@ input WalletRelateToOneForUpdateInput {
   create: WalletCreateInput
   connect: WalletWhereUniqueInput
   disconnect: Boolean
+}
+
+input PostRelateToManyForUpdateInput {
+  disconnect: [PostWhereUniqueInput!]
+  set: [PostWhereUniqueInput!]
+  create: [PostCreateInput!]
+  connect: [PostWhereUniqueInput!]
 }
 
 input UserUpdateArgs {
@@ -128,12 +145,18 @@ input UserCreateInput {
   password: String
   role: [UserRoleType!]
   wallet: WalletRelateToOneForCreateInput
+  posts: PostRelateToManyForCreateInput
   createdAt: DateTime
 }
 
 input WalletRelateToOneForCreateInput {
   create: WalletCreateInput
   connect: WalletWhereUniqueInput
+}
+
+input PostRelateToManyForCreateInput {
+  create: [PostCreateInput!]
+  connect: [PostWhereUniqueInput!]
 }
 
 type Wallet {
@@ -326,6 +349,7 @@ type Post {
   author: User
   assignment: JSON
   placements: [AssignmentPlacements]
+  createdAt: DateTime
 }
 
 enum PostStatusType {
@@ -369,6 +393,7 @@ input PostWhereInput {
   status: PostStatusTypeNullableFilter
   tags: TagManyRelationFilter
   author: UserWhereInput
+  createdAt: DateTimeNullableFilter
 }
 
 input PostStatusTypeNullableFilter {
@@ -383,6 +408,7 @@ input PostOrderByInput {
   title: OrderDirection
   description: OrderDirection
   status: OrderDirection
+  createdAt: OrderDirection
 }
 
 input PostUpdateInput {
@@ -393,6 +419,7 @@ input PostUpdateInput {
   tags: TagRelateToManyForUpdateInput
   author: UserRelateToOneForUpdateInput
   assignment: JSON
+  createdAt: DateTime
 }
 
 input PostUpdateArgs {
@@ -408,6 +435,7 @@ input PostCreateInput {
   tags: TagRelateToManyForCreateInput
   author: UserRelateToOneForCreateInput
   assignment: JSON
+  createdAt: DateTime
 }
 
 type Tag {
@@ -439,12 +467,6 @@ input AdManyRelationFilter {
   none: AdWhereInput
 }
 
-input PostManyRelationFilter {
-  every: PostWhereInput
-  some: PostWhereInput
-  none: PostWhereInput
-}
-
 input TagOrderByInput {
   id: OrderDirection
   name: OrderDirection
@@ -463,13 +485,6 @@ input AdRelateToManyForUpdateInput {
   connect: [AdWhereUniqueInput!]
 }
 
-input PostRelateToManyForUpdateInput {
-  disconnect: [PostWhereUniqueInput!]
-  set: [PostWhereUniqueInput!]
-  create: [PostCreateInput!]
-  connect: [PostWhereUniqueInput!]
-}
-
 input TagUpdateArgs {
   where: TagWhereUniqueInput!
   data: TagUpdateInput!
@@ -484,11 +499,6 @@ input TagCreateInput {
 input AdRelateToManyForCreateInput {
   create: [AdCreateInput!]
   connect: [AdWhereUniqueInput!]
-}
-
-input PostRelateToManyForCreateInput {
-  create: [PostCreateInput!]
-  connect: [PostWhereUniqueInput!]
 }
 
 """

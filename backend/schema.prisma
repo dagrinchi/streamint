@@ -12,16 +12,16 @@ generator client {
 }
 
 model User {
-  id               String    @id @default(cuid())
-  name             String    @default("")
-  email            String    @unique @default("")
-  password         String
-  role             String    @default("[]")
-  wallet           Wallet?   @relation("User_wallet", fields: [walletId], references: [id])
-  walletId         String?   @unique @map("wallet")
-  createdAt        DateTime? @default(now())
-  from_Ad_author   Ad[]      @relation("Ad_author")
-  from_Post_author Post[]    @relation("Post_author")
+  id             String    @id @default(cuid())
+  name           String    @default("")
+  email          String    @unique @default("")
+  password       String
+  role           String    @default("[]")
+  wallet         Wallet?   @relation("User_wallet", fields: [walletId], references: [id])
+  walletId       String?   @unique @map("wallet")
+  posts          Post[]    @relation("Post_author")
+  createdAt      DateTime? @default(now())
+  from_Ad_author Ad[]      @relation("Ad_author")
 }
 
 model Wallet {
@@ -48,16 +48,17 @@ model Ad {
 }
 
 model Post {
-  id             String  @id @default(cuid())
-  title          String  @default("")
-  description    String  @default("")
+  id             String    @id @default(cuid())
+  title          String    @default("")
+  description    String    @default("")
   status         String?
   video_filesize Int?
   video_filename String?
-  tags           Tag[]   @relation("Post_tags")
-  author         User?   @relation("Post_author", fields: [authorId], references: [id])
-  authorId       String? @map("author")
+  tags           Tag[]     @relation("Post_tags")
+  author         User?     @relation("Post_author", fields: [authorId], references: [id])
+  authorId       String?   @map("author")
   assignment     String?
+  createdAt      DateTime? @default(now())
 
   @@index([authorId])
 }
