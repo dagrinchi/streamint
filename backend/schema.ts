@@ -57,6 +57,7 @@ const isMe = ({ session }: { session?: Session }) => ({ id: { equals: session?.d
 
 export const lists = {
   User: list({
+    ui: { hideCreate: true },
     access: {
       operation: isLogged,
       filter: {
