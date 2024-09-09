@@ -25,10 +25,15 @@ npm install
 npm run dev
 ```
 
-3. Visit: [http://localhost:3000](http://localhost:3000) for video administration
+3. Visit: [http://localhost:3000](http://localhost:3000)
 
-4. And finally, for running development frontend project
+4. Create a new account with Content Creator ROLE [http://localhost:3000/init](http://localhost:3000/init)
 
+5. Then, Connect your Ar Connect Wallet [http://localhost:3000/wallet](http://localhost:3000/wallet)
+
+6. Now you're ready to create and upload your new videos in [http://localhost:3000/posts/create](http://localhost:3000/post/create)
+
+7. And finally, for running development frontend project
 
 ```
 cd ./frontend
@@ -37,7 +42,7 @@ npm install
 npm run dev
 ```
 
-5. Visit: [http://localhost:8080](http://localhost:8080) for video scrolling visualization
+8. Visit: [http://localhost:8080](http://localhost:8080) for video scrolling visualization
 
 ### Libraries
 
