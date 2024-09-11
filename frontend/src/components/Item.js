@@ -15,13 +15,14 @@ export default function Item({ data }) {
             data.tags.map((tag, index) => <span key={index}>[{tag.name}] </span>)
           }
         </p>
+        <div className="mb-4"></div>
         {
           (data.placements?.length > 0) && (
             <>
-              <h3 className="font-blinkmacsystemfont-black text-xl mb-3">ArFleet Placements:</h3>
+              <p className="font-blinkmacsystemfont-black">ArFleet Placements:</p>
               {data.placements.map((p, index) => (
                 <>
-                  <p key={index}>[{p.provider_connection_strings}]</p>
+                  <p key={index}>provider:[{p.provider_connection_strings}] status:[{p.status}] {p.error_was && `error_was:[${p.error_was}]`}</p>
                 </>
               ))}              
             </>
