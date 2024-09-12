@@ -12,6 +12,7 @@
     "@keystone-6/core": "^6.1.0",
     "@keystone-6/fields-document": "^9.0.0",
     "arweave-wallet-kit": "^1.0.4",
+    "dotenv": "^16.4.5",
     "typescript": "~5.0.0"
   }
 }

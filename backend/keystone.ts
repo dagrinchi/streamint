@@ -1,8 +1,11 @@
 import { config } from '@keystone-6/core'
 import { lists } from './schema'
 import path from 'path'
+import dotenv from 'dotenv'
 
 import { withAuth, session } from './auth'
+
+dotenv.config()
 
 const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL
 const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL

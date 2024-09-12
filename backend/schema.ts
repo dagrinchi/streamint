@@ -1,5 +1,8 @@
 import { list, graphql } from '@keystone-6/core'
 import path from 'path'
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 import {
   text,
