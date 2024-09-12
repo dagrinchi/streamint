@@ -19,7 +19,7 @@ import {
 
 import { type Lists } from '.keystone/types'
 
-const BASE_ARFLEET_CLIENT_URL = process.env.BASE_ARFLEET_CLIENT_URL
+const BASE_ARFLEET_CLIENT_URL = process.env.BASE_ARFLEET_CLIENT_URL || 'http://localhost:8885'
 
 type Session = {
   data: {

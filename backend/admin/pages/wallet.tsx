@@ -9,7 +9,7 @@ import { PageContainer } from '@keystone-6/core/admin-ui/components'
 import { jsx, Heading } from '@keystone-ui/core'
 import { ArweaveWalletKit, ConnectButton, useConnection } from 'arweave-wallet-kit'
 
-const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL
+const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL || 'http://localhost:3000'
 
 const ConnectWallet = dynamic(() => import('../components/ConnectWallet'), { ssr: false })
 const StoreWallet = dynamic(() => import('../components/StoreWallet'), { ssr: false })

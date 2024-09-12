@@ -7,8 +7,8 @@ import { withAuth, session } from './auth'
 
 dotenv.config()
 
-const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL
-const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL
+const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL || 'http://localhost:3000'
+const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL || 'http://localhost:8080'
 
 export default withAuth(
   config({
@@ -23,7 +23,7 @@ export default withAuth(
       local_files_storage: {
         kind: 'local',
         type: 'file',
-        generateUrl: path => `${BASE_BACKEND_URL}/files/${path}`,
+        generateUrl: path => `${BASE_BACKEND_URL}/files${path}`,
         serverRoute: {
           path: '/files'
         },
