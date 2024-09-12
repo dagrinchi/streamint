@@ -20,6 +20,7 @@ cd ../
 
 ```
 cd ./backend
+mv .env.example .env
 nvm use
 npm install
 npm run dev
@@ -37,6 +38,7 @@ npm run dev
 
 ```
 cd ./frontend
+mv .env.example .env
 nvm use
 npm install
 npm run dev
