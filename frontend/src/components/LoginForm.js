@@ -1,12 +1,12 @@
 import React from 'react'
 import { useForm } from 'react-hook-form'
 
-export default function LoginForm({ onLogin = () => {} }) {
+export default function LoginForm({ servicesBaseUrl, onLogin = () => {} }) {
   const { register, handleSubmit, formState: { errors }, } = useForm()
 
   const onSubmit = (data) => {
     (async () => {
-      const ures = await fetch('http://localhost:3000/api/graphql', {
+      const ures = await fetch(`${servicesBaseUrl}/api/graphql`, {
         method: 'POST',
         body: JSON.stringify({"query":"mutation AuthenticateUserWithPassword($email: String!, $password: String!) {\r\n  authenticateUserWithPassword(email: $email, password: $password) {\r\n    ... on UserAuthenticationWithPasswordSuccess {\r\n      item {\r\n        email\r\n        name\r\n        role\r\n      }\r\n    }\r\n  }\r\n}","variables":data,"operationName":"AuthenticateUserWithPassword"}),
         headers: { 'Content-Type': 'application/json' },

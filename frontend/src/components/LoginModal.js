@@ -3,13 +3,13 @@
 import React from 'react'
 import LoginForm from 'streamint/components/LoginForm'
 
-export default function LoginModal({ children }) {
+export default function LoginModal({ servicesBaseUrl, children }) {
   const [user, setUser] = React.useState()
   const [loading, setLoading] = React.useState(true)
   
   React.useEffect(() => {
     (async () => {
-      const ures = await fetch('http://localhost:3000/api/graphql', {
+      const ures = await fetch(`${servicesBaseUrl}/api/graphql`, {
         method: 'POST',
         body: JSON.stringify({ "query": "query Query {authenticatedItem {... on User {  email id name }}}", "variables": {}, "operationName": "Query" }),
         headers: { 'Content-Type': 'application/json' },
@@ -28,7 +28,7 @@ export default function LoginModal({ children }) {
   return (
     <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20">      
       <h1 className="font-blinkmacsystemfont-black font-bold text-4xl mb-4">Streamint</h1>
-      <LoginForm onLogin={setUser} />
+      <LoginForm servicesBaseUrl={servicesBaseUrl} onLogin={setUser} />
     </div>
   )
 }
