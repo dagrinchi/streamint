@@ -4,6 +4,9 @@ import path from 'path'
 
 import { withAuth, session } from './auth'
 
+const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL
+const BASE_FRONTEND_URL = process.env.BASE_FRONTEND_URL
+
 export default withAuth(
   config({
     db: {
@@ -12,12 +15,12 @@ export default withAuth(
     },
     lists,
     session,
-    server: { cors: { origin: ['http://localhost:3000', 'http://localhost:8080'], credentials: true } },
+    server: { cors: { origin: [BASE_BACKEND_URL, BASE_FRONTEND_URL], credentials: true } },
     storage: {
       local_files_storage: {
         kind: 'local',
         type: 'file',
-        generateUrl: path => `http://localhost:3000/files/${path}`,
+        generateUrl: path => `${BASE_BACKEND_URL}/files/${path}`,
         serverRoute: {
           path: '/files'
         },

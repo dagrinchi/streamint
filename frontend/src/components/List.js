@@ -22,7 +22,7 @@ export default function List({ servicesBaseUrl }) {
 
   if (!posts) return <p className="text-center">Loading...</p>
 
-  if (posts.length === 0) return <p className="text-center">Create posts in <Link target="_blank" href="http://localhost:3000/posts/create">http://localhost:3000/posts/create</Link></p>
+  if (posts.length === 0) return <p className="text-center">Create posts in <Link target="_blank" href={`${servicesBaseUrl}/posts/create`}>{servicesBaseUrl}/posts/create</Link></p>
 
   return (
     <>

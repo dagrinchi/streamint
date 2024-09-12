@@ -9,6 +9,8 @@ import { PageContainer } from '@keystone-6/core/admin-ui/components'
 import { jsx, Heading } from '@keystone-ui/core'
 import { ArweaveWalletKit, ConnectButton, useConnection } from 'arweave-wallet-kit'
 
+const BASE_BACKEND_URL = process.env.BASE_BACKEND_URL
+
 const ConnectWallet = dynamic(() => import('../components/ConnectWallet'), { ssr: false })
 const StoreWallet = dynamic(() => import('../components/StoreWallet'), { ssr: false })
 
@@ -23,7 +25,7 @@ export default function Wallet() {
         ensurePermissions: true,
         appInfo: {
           name: 'Streamint',
-          logo: 'http://localhost:3000/icon.png'
+          logo: `${BASE_BACKEND_URL}/icon.png`
         }
       }}>
         <ConnectWallet />

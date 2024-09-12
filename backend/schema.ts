@@ -16,6 +16,8 @@ import {
 
 import { type Lists } from '.keystone/types'
 
+const BASE_ARFLEET_CLIENT_URL = process.env.BASE_ARFLEET_CLIENT_URL
+
 type Session = {
   data: {
     id: string;
@@ -235,7 +237,7 @@ export const lists = {
               kty: "RSA",
               n: user.wallet.publickey
             }))
-            const res = await fetch(`http://localhost:8885/api/placements/${assignmentId}`, {
+            const res = await fetch(`${BASE_ARFLEET_CLIENT_URL}/api/placements/${assignmentId}`, {
               method: 'POST',
               body: JSON.stringify({ jwk }),
               headers: { 'Content-Type': 'application/json' }
@@ -261,7 +263,7 @@ export const lists = {
             kty: "RSA",
             n: user.wallet.publickey
           }))
-          const res = await fetch('http://localhost:8885/store', {
+          const res = await fetch(`${BASE_ARFLEET_CLIENT_URL}/store`, {
             method: 'POST',
             body: JSON.stringify({ path: video_fullpath, jwk }),
             headers: { 'Content-Type': 'application/json' }
